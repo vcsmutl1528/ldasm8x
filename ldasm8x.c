@@ -194,6 +194,7 @@ shu:		print_usage(ferr ? 1 : 0);
 		printf("%s: required arguments are not set\n", bname);
 		goto shu;
 	}
+	if (tabs==2) tabs=(unsigned char)-1 | (ctype==2 ? Z80DASM_ASPC : I8XDASM_ASPC);
 	if (strcmp(infname,"-")==0) fin=stdin;
 	else {
 		fin=fopen(infname, "rb");
