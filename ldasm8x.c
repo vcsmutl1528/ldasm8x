@@ -15,7 +15,7 @@
 #include "i8xdasm.h"
 #include "z80dasm.h"
 
-#define LDASM_DEF_CPU	1
+#define LDASM_DEF_CPU	2
 #if LDASM_DEF_CPU<0 || LDASM_DEF_CPU>2
 #error LDASM_DEF_CPU is in the range 0-2
 #endif
@@ -44,7 +44,7 @@
 #ifdef __linux__
 #define strcmpI strcasecmp
 #define strncmpI strncasecmp
-#elif defined(_WIN32) 
+#elif defined(_WIN32) || defined(__MSDOS__)
 #define strcmpI stricmp
 #define strncmpI strnicmp
 #endif
@@ -89,24 +89,24 @@ int _CRTAPI1 main (int argc, const char *argv[])
 	char ferr=0, f, fnoc=0, j, finc=0, foutc=0;
 	unsigned char *ps, *pe;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__MSDOS__)
 	_splitpath (argv[0], NULL, NULL, bname, NULL);
 #else
 	bname = basename(argv[0]);
 #endif
 	for (i=1; i<argc; i++) {
 		c = co = argv[i];
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__MSDOS__)
 		if ((*c=='-' || *c=='/') && c[1]!='\0') {
 #else
 		if (*c=='-' && c[1]!='\0') {
 #endif
 			if (*++c=='-') c++;
-#ifdef _WIN32
+#ifdef _WIN32 || defined(__MSDOS__)
 			if (*c=='/') c++;
 #endif
 			if (!strcmpI(c,"h") || !strcmpI(c,"help")
-#ifdef _WIN32
+#ifdef _WIN32 || defined(__MSDOS__)
 				|| !strcmp(c,"?")
 #endif
 				) {	ferr=1; goto shu;	}
@@ -278,7 +278,7 @@ static const char *skipsep(const char *c, int *i, int argc, const char *argv[])
 	return argv[n];
 }
 
-#if !defined(__GNUC__) || __GNUC__ > 7
+#if (!defined(__GNUC__) || __GNUC__ > 7) && !defined(__TURBOC__)
 __inline
 #endif
 size_t prints(const char *s) {
