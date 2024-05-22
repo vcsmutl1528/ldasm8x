@@ -29,12 +29,12 @@
 # error BUFSIZE < MINBUFSIZE*2
 #endif
 
-#ifdef _MSC_VER
 #ifndef _CRTAPI1
+#if defined(_MSC_VER) || defined(__TURBOC__)
 #define _CRTAPI1 __cdecl
-#endif
 #else
 #define _CRTAPI1
+#endif
 #endif
 
 #ifndef _countof
@@ -102,11 +102,11 @@ int _CRTAPI1 main (int argc, const char *argv[])
 		if (*c=='-' && c[1]!='\0') {
 #endif
 			if (*++c=='-') c++;
-#ifdef _WIN32 || defined(__MSDOS__)
+#if defined(_WIN32) || defined(__MSDOS__)
 			if (*c=='/') c++;
 #endif
 			if (!strcmpI(c,"h") || !strcmpI(c,"help")
-#ifdef _WIN32 || defined(__MSDOS__)
+#if defined(_WIN32) || defined(__MSDOS__)
 				|| !strcmp(c,"?")
 #endif
 				) {	ferr=1; goto shu;	}
